@@ -13,6 +13,7 @@ import { auth, database } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { firebase } from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface HomeProps {
   navigation: any;
