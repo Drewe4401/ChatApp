@@ -9,6 +9,10 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { auth, database } from "../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { firebase } from '../config/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface HomeProps {
   navigation: any;
@@ -17,21 +21,32 @@ interface HomeProps {
 const Register: React.FC<HomeProps> = (props) => {
 
   const [Email, setEmail] = useState('');
-  const [FnameConfirm, setFnameConfirm] = useState('');
-  const [Companyname, setCompanyname] = useState('');
-  const [CompanyID, setCompanyID] = useState('');
+  const [Username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [selected, setSelected] = useState("");
-  const [showInputEM, setShowInputEM] = useState(false);
-  const [showInputCO, setShowInputCO] = useState(false);
-
-  const data = [
-    {key:'2', value:'Owner'},
-]
 
   const handleRegister = () => {
-        props.navigation.navigate({screen: 'Home'});   
+
+    const todoRef = firebase.firestore().collection('users').doc(Email);
+
+    if(password !== confirmPassword){
+      console.log("Passwords do not match");
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, Email, password)
+      .then(async (credentials) => {
+        const token = await credentials.user.getIdToken();
+        const User_data = {
+          User_ID: credentials.user.uid,
+          Username: Username,
+          Email_Address: Email
+        };
+        todoRef
+          .set(User_data).then(() => {console.log("Register Complete"); AsyncStorage.setItem('authToken', token); props.navigation.navigate('Home');})
+          .catch((err) => Alert.alert("Register Error", err.message));
+      })
+      .catch((err) => Alert.alert("Register Error", err.message));
   };
   
   return (
@@ -47,9 +62,9 @@ const Register: React.FC<HomeProps> = (props) => {
         />
          <TextInput
           style={styles.input}
-          onChangeText={setFnameConfirm}
-          value={FnameConfirm}
-          placeholder="Enter Full Name"
+          onChangeText={setUsername}
+          value={Username}
+          placeholder="Enter Username"
           autoCapitalize="none"
         />
         <TextInput

@@ -1,55 +1,74 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import React, { useEffect } from "react";
+import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from '@expo/vector-icons';
+import colors from '../colors';
+import { Entypo } from '@expo/vector-icons';
 
-interface Chat {
-  id: string;
-  name: string;
-  lastMessage: string;
+interface LoginScreenProps {
+  navigation: any;
 }
 
-const chats: Chat[] = [
-  { id: '1', name: 'John Doe', lastMessage: 'Hey there!' },
-  { id: '2', name: 'Jane Smith', lastMessage: 'What\'s up?' },
-  // Add more chat data here
-];
+const Home: React.FC<LoginScreenProps> = (props) => {
 
-const Home: React.FC = () => {
-  const renderItem = ({ item }: { item: Chat }) => (
-    <View style={styles.chatItem}>
-      <Text style={styles.chatName}>{item.name}</Text>
-      <Text style={styles.chatLastMessage}>{item.lastMessage}</Text>
-    </View>
-  );
+    const navigation = useNavigation();
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={chats}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
-  );
-};
+    const handleProfile = () => {
+      // Perform login logic (e.g., call an API or validate user credentials)
+      props.navigation.navigate("Profile");
+    };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  chatItem: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 16,
-  },
-  chatName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  chatLastMessage: {
-    fontSize: 14,
-    color: '#777',
-  },
-});
+    
 
-export default Home;
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerLeft: () => (
+                <FontAwesome name="search" size={24} color={colors.logocolor} style={{marginLeft: 15}}/>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={handleProfile}>
+                <FontAwesome name='user' size={24} color={colors.logocolor} style={{marginRight: 15}}/>
+              </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity
+                onPress={() => props.navigation.navigate("Chat")}
+                style={styles.chatButton}
+            >
+                <Entypo name="chat" size={24} color={colors.lightGray} />
+            </TouchableOpacity>
+        </View>
+    );
+    };
+
+    export default Home;
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            backgroundColor: "#fff",
+        },
+        chatButton: {
+            backgroundColor: colors.primary,
+            height: 50,
+            width: 50,
+            borderRadius: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: colors.primary,
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: .9,
+            shadowRadius: 8,
+            marginRight: 20,
+            marginBottom: 50,
+        }
+    });

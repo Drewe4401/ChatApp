@@ -17,8 +17,8 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen name="Login" options={{headerShown: false}}  component={Login} />
           <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Profile" options={{headerShown: false}} component={Profile} />
+          <Stack.Screen name="Home" options={{headerTitleAlign: 'center'}} component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

@@ -32,7 +32,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
     const checkLoginStatus = async () => {
       const token = await AsyncStorage.getItem('authToken');
       if (token) {
-        props.navigation.navigate("Homenavigator", {screen: 'Home'});
+        props.navigation.navigate({screen: 'Home'});
       }
     };
     checkLoginStatus();
