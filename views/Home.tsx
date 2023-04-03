@@ -5,6 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import colors from '../colors';
 import { Entypo } from '@expo/vector-icons';
 
+
 interface LoginScreenProps {
   navigation: any;
 }
@@ -15,7 +16,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
 
     const handleProfile = () => {
       // Perform login logic (e.g., call an API or validate user credentials)
-      props.navigation.navigate("Profile");
+      props.navigation.toggleDrawer();
     };
 
     
@@ -23,12 +24,14 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     useEffect(() => {
         props.navigation.setOptions({
             headerLeft: () => (
-                <FontAwesome name="search" size={24} color={colors.logocolor} style={{marginLeft: 15}}/>
+            <TouchableOpacity style={styles.leftbutton} onPress={handleProfile}>
+                <FontAwesome name='bars' size={24} color={colors.logocolor} style={{marginRight: 15}}/>
+            </TouchableOpacity>
             ),
             headerRight: () => (
-              <TouchableOpacity onPress={handleProfile}>
-                <FontAwesome name='user' size={24} color={colors.logocolor} style={{marginRight: 15}}/>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.rightbutton} onPress={handleProfile}>
+                <FontAwesome name="search" size={24} color={colors.logocolor} style={{marginLeft: 15}}/>
+            </TouchableOpacity>
             ),
         });
     }, [navigation]);
@@ -70,5 +73,15 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             shadowRadius: 8,
             marginRight: 20,
             marginBottom: 50,
-        }
+        },
+        leftbutton: {
+            alignItems: 'center',
+            marginLeft: 15,
+            marginTop: 15,
+        },
+        rightbutton: {
+            alignItems: 'center',
+            marginRight: 15,
+            marginTop: 15,
+        },
     });

@@ -11,7 +11,9 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
+import { auth } from "../config/firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -26,14 +28,19 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
   const handleLogin = () => {
     // Perform login logic (e.g., call an API or validate user credentials)
-    props.navigation.navigate("Home");
+
+
+    signInWithEmailAndPassword(auth, Email, password)
+        .then(async (credentials) => {const token = await credentials.user.getIdToken();console.log("SignIn was a Success"); AsyncStorage.setItem('authToken', token);console.log(token);props.navigation.navigate("DrawerNavigator", {screen: 'Home'});})
+        .catch((err) => Alert.alert("Login error", err.message));
   };
+
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       const token = await AsyncStorage.getItem('authToken');
       if (token) {
-        props.navigation.navigate({screen: 'Home'});
+        props.navigation.navigate("DrawerNavigator", {screen: 'Home'});
       }
     };
     checkLoginStatus();
@@ -56,7 +63,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
         }}
         source={require('../assets/chatlogo.png')}/>
         <TextInput
-          style={styles.input}
+          style={styles2.input}
           onChangeText={setEmail}
           value={Email}
           placeholder="Enter Email Address"
@@ -70,7 +77,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           secureTextEntry
         />
         <LinearGradient
-          colors={['#4c669f', '#3b5998', '#192f6a']}
+          colors={['#f59e0b', '#f7b444', '#facb7c','#fce1b5']}
           style={styles.button}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -98,14 +105,28 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 60,
-    borderColor: 'gray',
+    fontSize: 14,
+    borderColor: '#ffcc73',
+    backgroundColor:'#F5FCFF',
+    borderRadius :100,
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    
   },
   button: {
-    backgroundColor: '#0718C4',
     paddingVertical: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
@@ -118,11 +139,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#2196F3',
     alignItems: 'center',
+    marginTop: 20,
+
+    
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
+    
   },
 });
+
+const styles2 = StyleSheet.create({   // style for email address input
+ 
+  inputContainer: {
+    paddingHorizontal: 20,
+  },
+  input: {
+    height: 60,
+    fontSize: 14,
+    borderColor: '#ffcc73',
+    backgroundColor:'#F5FCFF',
+    borderRadius :100,
+    borderWidth: 1,
+    marginBottom: 20,
+    marginTop: 20,
+    paddingHorizontal: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    
+  },
+})
 
 export default Login;
