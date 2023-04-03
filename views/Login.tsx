@@ -10,6 +10,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { auth } from "../config/firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,13 +38,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      const token = await AsyncStorage.getItem('authToken');
-      if (token) {
-        props.navigation.navigate("DrawerNavigator", {screen: 'Home'});
-      }
-    };
-    checkLoginStatus();
+
   }, []);
 
 
@@ -51,8 +46,9 @@ const Login: React.FC<LoginScreenProps> = (props) => {
   const registera = () => props.navigation.navigate("Register")
 
   return (
-
-    <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" style={styles.container}>
+    <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" >
+      <ImageBackground style={{height:'100%',width:'100%'}} source={require('../assets/background2.png')}>
+      <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Image
          style={{
@@ -61,7 +57,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           height: 200,
           width: 400,
         }}
-        source={require('../assets/chatlogo.png')}/>
+        source={require('../assets/whitelogo.png')}/>
         <TextInput
           style={styles2.input}
           onChangeText={setEmail}
@@ -90,6 +86,8 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           <Text style={styles.registertext}>Don't have an account? Click here to Register.</Text>
       </TouchableOpacity>
       </View>
+      </View>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 };
@@ -98,7 +96,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 150,
-    backgroundColor: '#F5FCFF',
   },
   inputContainer: {
     paddingHorizontal: 20,
