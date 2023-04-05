@@ -3,8 +3,10 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ImageBackground,
   View,
   Text,
+  Dimensions,
   KeyboardAvoidingView,
   ScrollView,
   Alert,
@@ -53,6 +55,8 @@ const Register: React.FC<HomeProps> = (props) => {
   return (
     <ScrollView style={styles.container}>
     <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" style={styles.container}>
+    <ImageBackground style={{height:Dimensions.get('window').height ,width:'100%'}}
+       source={require('../assets/background2.png')}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -82,10 +86,12 @@ const Register: React.FC<HomeProps> = (props) => {
           placeholder="Confirm Password"
           secureTextEntry
         />
+        
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
+      </ImageBackground>
       </KeyboardAvoidingView>
       </ScrollView>
   );

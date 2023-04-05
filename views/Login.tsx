@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,Component} from 'react';
+import { FloatingLabelInput } from 'react-native-floating-label-input';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,11 +7,14 @@ import {
   Button,
   TouchableOpacity,
   View,
+  Animated,
+  ScrollView,
   Text,
   Image,
   KeyboardAvoidingView,
   Alert,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import { auth } from "../config/firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,13 +45,17 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
   }, []);
 
+  ///////////////////////////
 
+  ///////////////////////////
 
   const registera = () => props.navigation.navigate("Register")
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" >
-      <ImageBackground style={{height:'100%',width:'100%'}} source={require('../assets/background2.png')}>
+      <ImageBackground style={{height:Dimensions.get('window').height /2.22 ,width:'100%'}}
+       source={require('../assets/background2.png')}>
+      <View></View>
       <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Image
@@ -58,6 +66,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           width: 400,
         }}
         source={require('../assets/whitelogo.png')}/>
+
         <TextInput
           style={styles2.input}
           onChangeText={setEmail}
@@ -65,6 +74,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           placeholder="Enter Email Address"
           autoCapitalize="none"
         />
+
         <TextInput
           style={styles.input}
           onChangeText={setPassword}
@@ -73,7 +83,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           secureTextEntry
         />
         <LinearGradient
-          colors={['#f59e0b', '#f7b444', '#facb7c','#fce1b5']}
+          colors={['#f3322f', '#f44a47', '#f5625f','#f77977','#f8918f']}
           style={styles.button}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -83,7 +93,9 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           </TouchableOpacity>
         </LinearGradient>
         <TouchableOpacity style={styles.registerlo} onPress={registera}>
-          <Text style={styles.registertext}>Don't have an account? Click here to Register.</Text>
+          <Text style={styles.registertext}>Don't have an account?
+            <Text style={styles.registertext2}> Register Now!</Text>
+          </Text> 
       </TouchableOpacity>
       </View>
       </View>
@@ -99,14 +111,15 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     paddingHorizontal: 20,
+    
   },
   input: {
     height: 60,
     fontSize: 14,
-    borderColor: '#ffcc73',
+    borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
-    borderWidth: 1,
+    borderWidth: 2,
     marginBottom: 20,
     paddingHorizontal: 10,
     shadowOpacity: 0.25,
@@ -134,33 +147,48 @@ const styles = StyleSheet.create({
   },
   registertext: {
     fontSize: 18,
-    color: '#2196F3',
+    color: '#6b615f',
     alignItems: 'center',
     marginTop: 20,
 
     
   },
+  registertext2:{
+    fontSize: 18,
+    fontStyle: 'italic',
+    color: '#f5625f',
+    alignItems: 'center',
+    marginTop: 20,
+  },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 20,
     
   },
+  bottomView:{
+    flex: 1.5,
+    backgroundColor: '#ffffff',
+    bottom: 50,
+    borderTopStartRadius:60,
+    borderBottomEndRadius:60,
+  }
 });
 
 const styles2 = StyleSheet.create({   // style for email address input
- 
+  
   inputContainer: {
     paddingHorizontal: 20,
   },
+
   input: {
     height: 60,
     fontSize: 14,
-    borderColor: '#ffcc73',
+    borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
-    borderWidth: 1,
+    borderWidth: 2,
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 43,
     paddingHorizontal: 10,
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
