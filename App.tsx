@@ -27,7 +27,6 @@ const DrawerNavigator = () => {
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
       <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
@@ -35,7 +34,6 @@ const App = () => {
         <Stack.Screen name="DrawerNavigator" options={{headerShown: false}} component={DrawerNavigator}/>
       </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
   );
 };
 

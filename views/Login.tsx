@@ -1,5 +1,4 @@
 import React, {useState, useEffect,Component} from 'react';
-import { FloatingLabelInput } from 'react-native-floating-label-input';
 import {
   SafeAreaView,
   StyleSheet,
@@ -53,9 +52,8 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" >
-      <ImageBackground style={{height:Dimensions.get('window').height /2.22 ,width:'100%'}}
+      <ImageBackground style={{height:Dimensions.get('window').height /2.3 ,width:'100%'}}
        source={require('../assets/background2.png')}>
-      <View></View>
       <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Image
@@ -64,9 +62,11 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           alignSelf:'center',
           height: 200,
           width: 400,
+          marginTop: 50,
+          marginBottom: 100,
         }}
         source={require('../assets/whitelogo.png')}/>
-
+        <Text style={styles.welcometext}>Welcome!</Text>
         <TextInput
           style={styles2.input}
           onChangeText={setEmail}
@@ -92,13 +92,15 @@ const Login: React.FC<LoginScreenProps> = (props) => {
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </LinearGradient>
-        <TouchableOpacity style={styles.registerlo} onPress={registera}>
-          <Text style={styles.registertext}>Don't have an account?
+        <View style={styles.registerlo}>
+        <Text style={styles.registertext}>Don't have an account?</Text>
+        <TouchableOpacity onPress={registera}>
             <Text style={styles.registertext2}> Register Now!</Text>
-          </Text> 
       </TouchableOpacity>
       </View>
       </View>
+      </View>
+      <View style={styles.bottomView}></View>
       </ImageBackground>
     </KeyboardAvoidingView>
   );
@@ -107,7 +109,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 150,
+    paddingVertical: 50,
   },
   inputContainer: {
     paddingHorizontal: 20,
@@ -144,14 +146,14 @@ const styles = StyleSheet.create({
   registerlo: {
     marginTop: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   registertext: {
     fontSize: 18,
     color: '#6b615f',
     alignItems: 'center',
     marginTop: 20,
-
-    
   },
   registertext2:{
     fontSize: 18,
@@ -162,15 +164,22 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
+    fontWeight: 'bold',
     fontSize: 20,
     
   },
+  welcometext: {
+    color: '#f5625f',
+    fontWeight: 'bold',
+    fontSize: 45,
+    justifyContent: 'center',
+    
+  },
   bottomView:{
-    flex: 1.5,
-    backgroundColor: '#ffffff',
-    bottom: 50,
+    height: 30,
+    backgroundColor: '#f2f2f2',
     borderTopStartRadius:60,
-    borderBottomEndRadius:60,
+    borderTopEndRadius:60,
   }
 });
 
