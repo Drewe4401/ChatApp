@@ -79,7 +79,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           style={styles.input}
           onChangeText={setPassword}
           value={password}
-          placeholder="Password"
+          placeholder="Enter Password"
           secureTextEntry
         />
         <LinearGradient
@@ -89,7 +89,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
           end={{ x: 1, y: 0 }}
         >
           <TouchableOpacity onPress={handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Login!</Text>
           </TouchableOpacity>
         </LinearGradient>
         <View style={styles.registerlo}>

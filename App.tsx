@@ -30,7 +30,7 @@ const App = () => {
       <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
-        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Register" options={{headerShown: false}}  component={Register} />
         <Stack.Screen name="DrawerNavigator" options={{headerShown: false}} component={DrawerNavigator}/>
       </Stack.Navigator>
       </NavigationContainer>
