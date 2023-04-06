@@ -51,7 +51,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
   const registera = () => props.navigation.navigate("Register")
 
   return (
-    <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" >
+    <KeyboardAvoidingView keyboardVerticalOffset={400} behavior="position" >
       <ImageBackground style={{height:Dimensions.get('window').height /2.3 ,width:'100%'}}
        source={require('../assets/background2.png')}>
       <View style={styles.container}>
@@ -102,7 +102,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
       </View>
       <View style={styles.bottomView}></View>
       </ImageBackground>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
   );
 };
 

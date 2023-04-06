@@ -56,7 +56,7 @@ const Register: React.FC<HomeProps> = (props) => {
   const Logina = () => props.navigation.navigate("Login")
   
   return (
-    <KeyboardAvoidingView keyboardVerticalOffset={-200} behavior="position" >
+    <KeyboardAvoidingView keyboardVerticalOffset={400} behavior="position" >
       <ImageBackground style={{height:Dimensions.get('window').height /2.7 ,width:'100%'}}
        source={require('../assets/background2.png')}>
       <View style={styles.container}>
