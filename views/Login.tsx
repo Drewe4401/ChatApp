@@ -84,11 +84,10 @@ const Login: React.FC<LoginScreenProps> = (props) => {
         />
         <LinearGradient
           colors={['#f3322f', '#f44a47', '#f5625f','#f77977','#f8918f']}
-          style={styles.button}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
         >
-          <TouchableOpacity onPress={handleLogin}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login!</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -131,14 +130,6 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
