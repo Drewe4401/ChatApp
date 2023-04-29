@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#6b615f',
     alignItems: 'center',
-    marginTop: '-5%',
+    marginTop: '-8%',
     marginBottom: '10%'
   },
   registertext2:{
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: '#f5625f',
     alignItems: 'center',
-    marginTop: '-77%',
+    marginTop: '-85%',
   },
   buttonText: {
     color: '#FFFFFF',
