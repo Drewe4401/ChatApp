@@ -60,10 +60,10 @@ const Login: React.FC<LoginScreenProps> = (props) => {
          style={{
           resizeMode: 'contain',
           alignSelf:'center',
-          height: 200,
-          width: 400,
-          marginTop: 50,
-          marginBottom: 100,
+          height: '35%',
+          width: '100%',
+          marginTop: '10%',
+          marginBottom: '30%',
         }}
         source={require('../assets/whitelogo.png')}/>
         <Text style={styles.welcometext}>Welcome!</Text>
@@ -108,34 +108,34 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 50,
+    paddingVertical: '12%',
   },
   inputContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: '5%',
     
   },
   input: {
-    height: 60,
+    height: '10%',
     fontSize: 14,
     borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
     borderWidth: 2,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: '11%',
+    paddingHorizontal: '5%',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
     
   },
   button: {
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingVertical: '6%',
+    paddingHorizontal: '10%',
     borderRadius: 5,
     alignItems: 'center',
   },
   registerlo: {
-    marginTop: 10,
+    marginTop: '9%',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -144,14 +144,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#6b615f',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '5%',
   },
   registertext2:{
     fontSize: 18,
     fontStyle: 'italic',
     color: '#f5625f',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '15%',
   },
   buttonText: {
     color: '#FFFFFF',
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     
   },
   bottomView:{
-    height: 30,
+    height: '7%',
     backgroundColor: '#f2f2f2',
     borderTopStartRadius:60,
     borderTopEndRadius:60,
@@ -181,15 +181,15 @@ const styles2 = StyleSheet.create({   // style for email address input
   },
 
   input: {
-    height: 60,
+    height: '10%',
     fontSize: 14,
     borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
     borderWidth: 2,
-    marginBottom: 20,
-    marginTop: 43,
-    paddingHorizontal: 10,
+    marginBottom: '6%',
+    marginTop: '10%',
+    paddingHorizontal: '5%',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,

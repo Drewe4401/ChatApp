@@ -55,6 +55,7 @@ const Register: React.FC<HomeProps> = (props) => {
 
   const Logina = () => props.navigation.navigate("Login")
   
+
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={400} behavior="position" >
       <ImageBackground style={{height:Dimensions.get('window').height /2.7 ,width:'100%'}}
@@ -65,12 +66,12 @@ const Register: React.FC<HomeProps> = (props) => {
          style={{
           resizeMode: 'contain',
           alignSelf:'center',
-          height: 200,
-          width: 400,
-          bottom:65,
+          height: '50%',
+          width: '100%',
+          bottom:'10%',
         }}
         source={require('../assets/whitelogo.png')}/>
-        <View style={{top: 30,}}>
+        <View style={{top: '6%',}}>
         <TextInput
           style={styles2.input}
           onChangeText={setEmail}
@@ -126,34 +127,34 @@ const Register: React.FC<HomeProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 110,
+    paddingVertical: '20%',
   },
   inputContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: '6%',
     
   },
   input: {
-    height: 60,
-    fontSize: 14,
+    height: '10%',
+    fontSize: 15,
     borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
     borderWidth: 2,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: '7%',
+    paddingHorizontal: '10%',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
     
   },
   button: {
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingVertical: '7%',
+    paddingHorizontal: '10%',
     borderRadius: 5,
     alignItems: 'center',
   },
   registerlo: {
-    marginTop: 10,
+    marginTop: '20%',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -162,19 +163,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#6b615f',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '-5%',
+    marginBottom: '10%'
   },
   registertext2:{
     fontSize: 18,
     fontStyle: 'italic',
     color: '#f5625f',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '-77%',
   },
   buttonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 20,
+    marginBottom:'1%'
     
   },
   welcometext: {
@@ -182,11 +185,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 45,
     justifyContent: 'center',
-    top: 30,
+    top: '30%',
     
   },
   bottomView:{
-    height: 70,
+    height: '20%',
     backgroundColor: '#f2f2f2',
     borderTopStartRadius:60,
     alignItems: 'center',
@@ -201,15 +204,15 @@ const styles2 = StyleSheet.create({   // style for email address input
   },
 
   input: {
-    height: 60,
-    fontSize: 14,
+    height: '10%',
+    fontSize: 15,
     borderColor: '#f5625f',
     backgroundColor:'#F5FCFF',
     borderRadius :100,
     borderWidth: 2,
-    marginBottom: 20,
-    marginTop: 43,
-    paddingHorizontal: 10,
+    marginBottom: '7%',
+    marginTop: '15%',
+    paddingHorizontal: '10%',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
