@@ -4,6 +4,7 @@ import Login from './views/Login';
 import Home from './views/Home';
 import Profile from './views/Profile';
 import Register from './views/Register';
+import Logout from './views/Logout';
 import CustomHeader from './views/CustomHeader';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -15,11 +16,12 @@ const Drawer = createDrawerNavigator(); // Create a Drawer navigator
 
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="Home" >
+    <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen name="Home" options={{headerTitleAlign: 'center'}} component={Home} />
       <Drawer.Screen name="Profile" options={{header: ({ navigation, route }) => (
       <CustomHeader navigation={navigation} title={route.name} />
     ),}} component={Profile} />
+    <Drawer.Screen name="Logout" component={Logout} />
     </Drawer.Navigator>
   );
 };

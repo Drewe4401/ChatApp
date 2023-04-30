@@ -41,12 +41,14 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
 
   useEffect(() => {
-
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      if (token) {
+        props.navigation.navigate("DrawerNavigator", {screen: 'Home'});
+      }
+    };
+    checkLoginStatus();
   }, []);
-
-  ///////////////////////////
-
-  ///////////////////////////
 
   const registera = () => props.navigation.navigate("Register")
 

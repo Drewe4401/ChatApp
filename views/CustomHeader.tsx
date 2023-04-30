@@ -14,7 +14,7 @@ const CustomHeader: React.FC<LoginScreenProps> = (props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-        <FontAwesome name="bars" size={24} color="#f59e0b" />
+        <FontAwesome name="bars" size={24} color="#000000" />
       </TouchableOpacity>
     </View>
   );

@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, View, Button, Text } from 'react-native';
 
@@ -12,6 +13,9 @@ const Profile: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.topper}>
+        <View style={styles.topbackground}></View>
+        </View>
       <TextInput
         style={styles.input}
         onChangeText={setEmail}
@@ -44,6 +48,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
+  },
+  topper:{
+alignItems:'center'
+  },
+  topbackground: {
+    backgroundColor: '#f3322f',
+    width: 500,
+    height: 500,
+    borderRadius: 500/2,
+    bottom: 350,
   },
 });
 
