@@ -56,12 +56,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
         // Call your API to change the user's password
         try {
           const result = await changeUserPassword(userEmail, currentPassword, newPassword);
-          if (result) {
             Alert.alert('Success', 'Your password has been changed');
             props.navigation.goBack();
-          } else {
-            Alert.alert('Error', 'Could not change the password');
-          }
         } catch (error) {
         console.log('Error details:', error); // Add this line to log the error details
           Alert.alert('Error', 'An error occurred while changing the password');
@@ -101,7 +97,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Change Password</Text>
       <TextInput
         style={styles.input}
         onChangeText={setCurrentPassword}

@@ -19,6 +19,11 @@ const Home: React.FC<LoginScreenProps> = (props) => {
       props.navigation.toggleDrawer();
     };
 
+    const handleSearch = () => {
+        //needs to me programmed
+
+    }
+
     
 
     useEffect(() => {
@@ -29,7 +34,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             </TouchableOpacity>
             ),
             headerRight: () => (
-            <TouchableOpacity style={styles.rightbutton} onPress={handleProfile}>
+            <TouchableOpacity style={styles.rightbutton} onPress={handleSearch}>
                 <FontAwesome name="search" size={24} color={colors.blackcolor} style={{marginLeft: 15}}/>
             </TouchableOpacity>
             ),
@@ -39,7 +44,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                onPress={() => props.navigation.navigate("Chat")}
+                onPress={() => props.navigation.navigate("ChatView")}
                 style={styles.chatButton}
             >
                 <Entypo name="chat" size={24} color={colors.lightGray} />

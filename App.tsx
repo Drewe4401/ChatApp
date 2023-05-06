@@ -9,6 +9,8 @@ import CustomHeader from './views/CustomHeader';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import the drawer components
+import ChatView from './views/ChatView';
+import Chat from './views/Chat';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator(); // Create a Drawer navigator
@@ -33,7 +35,9 @@ const App = () => {
         <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
         <Stack.Screen name="Register" options={{headerShown: false}}  component={Register} />
         <Stack.Screen name="DrawerNavigator" options={{headerShown: false}} component={DrawerNavigator}/>
-        <Stack.Screen name="ChangePassword"  component={ChangePassword} />
+        <Stack.Screen name="ChangePassword" options={{title: "Change Password", headerTitleAlign: 'center'}}  component={ChangePassword} />
+        <Stack.Screen name="ChatView" options={{title: "Find User", headerTitleAlign: 'center'}}  component={ChatView} />
+        <Stack.Screen name="Chat" options={{title: "Find User", headerTitleAlign: 'center'}}  component={Chat} />
       </Stack.Navigator>
       </NavigationContainer>
   );
