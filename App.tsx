@@ -4,6 +4,7 @@ import Login from './views/Login';
 import Home from './views/Home';
 import Profile from './views/Profile';
 import Register from './views/Register';
+import ChangePassword from './views/ChangePassword';
 import CustomHeader from './views/CustomHeader';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -32,6 +33,7 @@ const App = () => {
         <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
         <Stack.Screen name="Register" options={{headerShown: false}}  component={Register} />
         <Stack.Screen name="DrawerNavigator" options={{headerShown: false}} component={DrawerNavigator}/>
+        <Stack.Screen name="ChangePassword"  component={ChangePassword} />
       </Stack.Navigator>
       </NavigationContainer>
   );
