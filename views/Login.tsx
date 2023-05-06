@@ -33,7 +33,7 @@ const Login: React.FC<LoginScreenProps> = (props) => {
   const handleLogin = () => {
     // Perform login logic (e.g., call an API or validate user credentials)
 
-
+    console.log(auth);
     signInWithEmailAndPassword(auth, Email, password)
         .then(async (credentials) => {const token = await credentials.user.getIdToken();console.log("SignIn was a Success"); AsyncStorage.setItem('authToken', token);console.log(token);props.navigation.navigate("DrawerNavigator", {screen: 'Home'});})
         .catch((err) => Alert.alert("Login error", err.message));

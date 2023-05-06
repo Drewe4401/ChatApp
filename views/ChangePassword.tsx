@@ -74,7 +74,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
 
   const changeUserPassword = async (email: any, currentPassword: any, newPassword: any) => {
     try {
-    console.log('Email:', email, 'Current Password:', currentPassword); // Add this line to log the email and current password
       await signInWithEmailAndPassword(auth, email, currentPassword).then(async () => {
         const user = auth.currentUser;
         if (user) {
@@ -83,7 +82,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
     
             await reauthenticateWithCredential(user, credential);
             await updatePassword(user, newPassword);
-    
+            console.log('true');
             return true;
           } catch (error) {
             console.error('Error updating password:', error);
