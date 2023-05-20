@@ -32,9 +32,9 @@ const App = () => {
   return (
       <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
-        <Stack.Screen name="Register" options={{headerShown: false}}  component={Register} />
-        <Stack.Screen name="DrawerNavigator" options={{headerShown: false}} component={DrawerNavigator}/>
+        <Stack.Screen name="Login" options={{headerShown: false, gestureEnabled: false}} component={Login} />
+        <Stack.Screen name="Register" options={{headerShown: false, gestureEnabled: false}}  component={Register} />
+        <Stack.Screen name="DrawerNavigator" options={{headerShown: false, gestureEnabled: false}} component={DrawerNavigator}/>
         <Stack.Screen name="ChangePassword" options={{title: "Change Password", headerTitleAlign: 'center'}}  component={ChangePassword} />
         <Stack.Screen name="ChatView" options={{title: "Find User", headerTitleAlign: 'center'}}  component={ChatView} />
         <Stack.Screen name="Chat" options={{title: "Find User", headerTitleAlign: 'center'}}  component={Chat} />

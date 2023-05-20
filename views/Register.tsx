@@ -31,9 +31,10 @@ const Register: React.FC<HomeProps> = (props) => {
 
   const handleRegister = () => {
 
-    const todoRef = firebase.firestore().collection('users').doc(Email);
+    const todoRef = firebase.firestore().collection('users').doc(Email.toLowerCase());
 
     if(password !== confirmPassword){
+      Alert.alert("Error: Passwords do not match!");
       console.log("Passwords do not match");
       return;
     }
@@ -44,10 +45,10 @@ const Register: React.FC<HomeProps> = (props) => {
         const User_data = {
           User_ID: credentials.user.uid,
           Username: Username,
-          Email_Address: Email
+          Email_Address: Email.toLowerCase()
         };
         todoRef
-          .set(User_data).then(() => {console.log("Register Complete"); AsyncStorage.setItem('authToken', token); props.navigation.navigate('Home');})
+          .set(User_data).then(() => {console.log("Register Complete"); AsyncStorage.setItem('authToken', token); props.navigation.navigate("DrawerNavigator", {screen: 'Home'});})
           .catch((err) => Alert.alert("Register Error", err.message));
       })
       .catch((err) => Alert.alert("Register Error", err.message));

@@ -1,26 +1,51 @@
 // ChatView.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../config/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwtDecode from 'jwt-decode';
 
 interface LoginScreenProps {
     navigation: any;
+  }
+
+interface DecodedToken {
+    email: string;
+    // Add other properties you expect in the token here
   }
   
 const ChatView: React.FC<LoginScreenProps> = (props) => {
 
     
   const [email, setEmail] = useState('');
+  const [UserEmail, setUserEmail] = useState('');
   const navigation = useNavigation();
 
   const fetchUserData = async (email : any) => {
+
+
+      const authToken = await AsyncStorage.getItem('authToken');
+
+      if (authToken) {
+        const decodedToken = jwtDecode(authToken) as DecodedToken;
+        setUserEmail(decodedToken.email.toLowerCase());
+        console.log(UserEmail);
+      }
+
+      
+
     try {
-      const userSnapshot = await firebase.firestore().collection('users').where('email', '==', email).get();
+      const userSnapshot = await firebase.firestore().collection('users').where('Email_Address', '==', email).get();
       if (!userSnapshot.empty) {
+        console.log(userSnapshot.docs[0]);
+        const newEmail = userSnapshot.docs[0].get('Email_Address');
+        const todoRef = firebase.firestore().collection('users').doc(UserEmail).collection('messaging_users').doc(newEmail);
+        todoRef
+          .set(userSnapshot.docs[0].data())
         return userSnapshot.docs[0].data();
       } else {
-        throw new Error('User not found');
+        Alert.alert("User not found");
       }
     } catch (error) {
       console.error('Error fetching user data:', error);

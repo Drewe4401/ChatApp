@@ -55,7 +55,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
       if (userEmail) {
         // Call your API to change the user's password
         try {
-          const result = await changeUserPassword(userEmail, currentPassword, newPassword);
+          const result = await changeUserPassword(userEmail.toLowerCase(), currentPassword, newPassword);
             Alert.alert('Success', 'Your password has been changed');
             props.navigation.goBack();
         } catch (error) {
@@ -70,11 +70,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
 
   const changeUserPassword = async (email: any, currentPassword: any, newPassword: any) => {
     try {
-      await signInWithEmailAndPassword(auth, email, currentPassword).then(async () => {
+      await signInWithEmailAndPassword(auth, email.toLowerCase(), currentPassword).then(async () => {
         const user = auth.currentUser;
         if (user) {
           try {
-            const credential = EmailAuthProvider.credential(email, currentPassword);
+            const credential = EmailAuthProvider.credential(email.toLowerCase(), currentPassword);
     
             await reauthenticateWithCredential(user, credential);
             await updatePassword(user, newPassword);
