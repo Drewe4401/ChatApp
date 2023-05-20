@@ -58,42 +58,44 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         }
       };
 
-      const fetchData = async (email: string) => {
-        try {
-          const collectionName = 'users';
-          const snapshot = await firebase
-            .firestore()
-            .collection(collectionName)
-            .doc(email)
-            .collection('messaging_users')
-            .onSnapshot((snapshot) => {
-                const fetchedDocuments: Array<{ Email_Address: string; Username: string }> = [];
+      const fetchData = (email: string): (() => void) => {
+        const collectionName = 'users';
     
-                snapshot.forEach((doc) => {
-                    fetchedDocuments.push({ Email_Address: doc.data().Email_Address, Username: doc.data().Username });
-                });
+        const unsubscribe = firebase
+          .firestore()
+          .collection(collectionName)
+          .doc(email)
+          .collection('messaging_users')
+          .onSnapshot((snapshot) => {
+              const fetchedDocuments: Message[] = [];
     
-                setDocuments(fetchedDocuments);
-            });
-        } catch (error) {
-          console.error('Error fetching documents:', error);
-        }
-      };
+              snapshot.forEach((doc) => {
+                  fetchedDocuments.push({ Email_Address: doc.data().Email_Address, Username: doc.data().Username });
+              });
     
-      useEffect(() => {
-        let unsubscribe: any;
-        getEmailFromAuthToken().then((email) => {
-            if (email) {
-                unsubscribe = fetchData(email);
-            }
-        });
+              setDocuments(fetchedDocuments);
+          }, (error) => {
+              console.error('Error fetching documents:', error);
+          });
     
-        return () => {
-            if (unsubscribe) {
-                unsubscribe();
-            }
-        }
-    }, []);
+        return unsubscribe;  // Returning the function to unsubscribe from the snapshot listener
+    };
+    
+    useEffect(() => {
+      let unsubscribe: any;
+  
+      getEmailFromAuthToken().then((email) => {
+          if (email) {
+              unsubscribe = fetchData(email);
+          }
+      });
+  
+      return () => {
+          if (unsubscribe) {
+              unsubscribe();
+          }
+      }
+  }, []);
 
     useEffect(() => {
         props.navigation.setOptions({
@@ -124,17 +126,21 @@ const Home: React.FC<LoginScreenProps> = (props) => {
 
     return (
         <View style={styles.container}>
+          <View>
             <FlatList
                 data={documents}
                 renderItem={renderItem}
                 keyExtractor={item => item.Email_Address}
             />
+            </View>
+            <View style={styles.container_button}>
             <TouchableOpacity
                 onPress={() => props.navigation.navigate("ChatView")}
                 style={styles.chatButton}
             >
                 <Entypo name="chat" size={24} color={colors.lightGray} />
             </TouchableOpacity>
+            </View>
         </View>
     );
     };
@@ -144,10 +150,13 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
             backgroundColor: "#fff",
         },
+        container_button: {
+          position: 'absolute',
+          marginTop: '175%',
+          marginLeft: '85%',
+      },
         chatButton: {
             backgroundColor: colors.blackcolor,
             height: 50,
@@ -155,24 +164,17 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             borderRadius: 25,
             alignItems: 'center',
             justifyContent: 'center',
-            marginRight: 20,
-            marginBottom: 50,
         },
         itemText: {
-            color: '#FFF',
-            fontSize: 14,
+            color: '#000',
+            fontSize: 16,
           },
         fancyContainer: {
-            backgroundColor: '#007BFF',
-            borderRadius: 10,
-            paddingVertical: 15,
-            paddingHorizontal: 100,
-            marginVertical: 5,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
+          maxWidth: '100%',
+          height: 80,
+          padding: 10,
+          marginVertical: 1,
+          backgroundColor: '#e5e5ea',
           },
         leftbutton: {
             alignItems: 'center',

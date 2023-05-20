@@ -3,9 +3,16 @@ import { StyleSheet, TextInput, View, Button, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import UploadImage from './UploadImage';
+import jwtDecode from 'jwt-decode';
+import { firebase } from '../config/firebase';
 
 interface LoginScreenProps {
   navigation: any;
+}
+
+interface DecodedToken {
+  email: string;
+  // Add other properties you expect in the token here
 }
 
 const Profile: React.FC<LoginScreenProps> = (props) => {
@@ -14,9 +21,10 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
 
   useEffect(() => {
     const getEmail = async () => {
-      const userEmail = await AsyncStorage.getItem('userEmail');
-      if (userEmail) {
-        setEmail(userEmail);
+      const authToken = await AsyncStorage.getItem('authToken');
+      if (authToken) {
+        const decodedToken = jwtDecode(authToken) as DecodedToken;
+        setEmail(decodedToken.email);
       }
     };
     getEmail();
@@ -31,6 +39,10 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
     props.navigation.navigate("ChangePassword");
   };
 
+  const handleProfileImage = () => {
+    const todoRef = firebase.firestore().collection('users').doc(email.toLowerCase());
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topper}>
@@ -38,6 +50,9 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
         <UploadImage/>
       </View>
       <View style={styles.inputcontainer}>
+      <TouchableOpacity style={styles.changePassword} onPress={handleProfileImage}>
+          <Text>Update Profile Image</Text>
+      </TouchableOpacity>
         <Text>Email: {email}</Text>
         <TouchableOpacity style={styles.changePassword} onPress={handleChangePassword}>
           <Text>Change Password</Text>

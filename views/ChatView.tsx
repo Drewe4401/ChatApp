@@ -22,17 +22,8 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
   const [UserEmail, setUserEmail] = useState('');
   const navigation = useNavigation();
 
-  const fetchUserData = async (email : any) => {
-
-
-      const authToken = await AsyncStorage.getItem('authToken');
-
-      if (authToken) {
-        const decodedToken = jwtDecode(authToken) as DecodedToken;
-        setUserEmail(decodedToken.email.toLowerCase());
-        console.log(UserEmail);
-      }
-
+  const fetchUserData = async (email : string) => {
+    console.log(email.toLowerCase());
       
 
     try {
@@ -40,6 +31,11 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
       if (!userSnapshot.empty) {
         console.log(userSnapshot.docs[0]);
         const newEmail = userSnapshot.docs[0].get('Email_Address');
+        const authToken = await AsyncStorage.getItem('authToken');
+        if(authToken){
+        const decodedToken = jwtDecode(authToken) as DecodedToken;
+        setUserEmail(decodedToken.email.toLowerCase());
+        }
         const todoRef = firebase.firestore().collection('users').doc(UserEmail).collection('messaging_users').doc(newEmail);
         todoRef
           .set(userSnapshot.docs[0].data())
