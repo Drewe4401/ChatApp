@@ -36,7 +36,7 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
       
 
     try {
-      const userSnapshot = await firebase.firestore().collection('users').where('Email_Address', '==', email).get();
+      const userSnapshot = await firebase.firestore().collection('users').where('Email_Address', '==', email.toLowerCase()).get();
       if (!userSnapshot.empty) {
         console.log(userSnapshot.docs[0]);
         const newEmail = userSnapshot.docs[0].get('Email_Address');
@@ -59,7 +59,7 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
       if (userData) {
         // You can create chat logic here
         // For example, create a chat document in Firestore, add members to the chat, etc.
-        
+        props.navigation.navigate("Chat");
       }
     } catch (error) {
       console.error('Error creating chat:', error);

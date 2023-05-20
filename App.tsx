@@ -37,7 +37,7 @@ const App = () => {
         <Stack.Screen name="DrawerNavigator" options={{headerShown: false, gestureEnabled: false}} component={DrawerNavigator}/>
         <Stack.Screen name="ChangePassword" options={{title: "Change Password", headerTitleAlign: 'center'}}  component={ChangePassword} />
         <Stack.Screen name="ChatView" options={{title: "Find User", headerTitleAlign: 'center'}}  component={ChatView} />
-        <Stack.Screen name="Chat" options={{title: "Find User", headerTitleAlign: 'center'}}  component={Chat} />
+        <Stack.Screen name="Chat" options={{title: "Chat", headerTitleAlign: 'center'}}  component={Chat} />
       </Stack.Navigator>
       </NavigationContainer>
   );
