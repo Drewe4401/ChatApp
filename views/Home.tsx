@@ -121,7 +121,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
 
           </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
-            <Text style={styles.itemText}>Name: {item.Username}</Text>
+            <Text style={styles.itemText}>{item.Username}</Text>
           </TouchableOpacity>
           </View>
         </View>
@@ -171,7 +171,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         },
         itemText: {
             color: '#000',
-            fontSize: 16,
+            fontSize: 20,
           },
         
         combineContainer:{
