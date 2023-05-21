@@ -192,6 +192,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           height: 80,
           marginVertical: 1,
           flexBasis:80,
+          borderRadius: 25,
         },
 
         fancyContainer: {

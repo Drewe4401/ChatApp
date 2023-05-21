@@ -48,19 +48,38 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.topper}>
-        <View style={styles.topbackground}></View>
+        <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{x: 1, y: 1 }}
+            colors={['#5851DB', '#C13584', '#E1306C', '#FD1D1D', '#F77737']}
+            style={styles.topbackground}
+            >
+        </LinearGradient>
+        
         <UploadImage/>
       </View>
+      
       <View style={styles.inputcontainer}>
-      <TouchableOpacity style={styles.changePassword} onPress={handleProfileImage}>
-          <Text>Update Profile Image</Text>
-      </TouchableOpacity>
-        <Text>Email: {email}</Text>
-        <TouchableOpacity style={styles.changePassword} onPress={handleChangePassword}>
-          <Text>Change Password</Text>
+        <Text>User Email: {email}</Text>
+        {/* /*<Text>User Name: {}</Text> */}
+        <TouchableOpacity onPress={handleChangePassword}>
+          <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{x: 1, y: 1 }}
+              colors={['#f5630b', '#f5770b', '#f58b0b', '#f59e0b', '#f5b20b']}
+              style={styles.changePassword}>
+              <Text>Change Password</Text>
+          </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.logout} onPress={handleLogout}>
+        <TouchableOpacity onPress={handleLogout}>
+        <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{x: 1, y: 1 }}
+              colors={['#f50b28', '#f5160b', '#f53d0b', '#f5500b', '#f5640b']}
+              style={styles.logout}>
           <Text>Logout</Text>
+          </LinearGradient>
+
         </TouchableOpacity>
       </View>
     </View>
@@ -81,6 +100,7 @@ const styles = StyleSheet.create({
   topper:{
     alignItems:'center'
   },
+
   topbackground: {
     backgroundColor: '#f3322f',
     width: 500,

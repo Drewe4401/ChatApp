@@ -127,16 +127,19 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     padding: 16,
   },
   input: {
+    backgroundColor: 'white',
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#FFFFFF',
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
+    borderBottomColor: 'gray',
   },
   title: {
     fontSize: 24,
@@ -145,12 +148,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   submit: {
-    width: "100%",
+    width: "50%",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#007AFF",
+    marginLeft: '25%',
   },
 });
 
