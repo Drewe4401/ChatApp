@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, FlatList, Image, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, FlatList, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '../colors';
@@ -21,12 +21,15 @@ interface DecodedToken {
 interface Message{
     Email_Address: string;
     Username: string;
+    profilePicture: string;
 }
 
 const Home: React.FC<LoginScreenProps> = (props) => {
 
     const [email, setEmail] = useState('');
     const [documents, setDocuments] = useState<Message[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const navigation = useNavigation();
 
@@ -59,24 +62,27 @@ const Home: React.FC<LoginScreenProps> = (props) => {
       };
 
       const fetchData = (email: string): (() => void) => {
-        const collectionName = 'users';
+
+        setIsLoading(true);
     
         const unsubscribe = firebase
           .firestore()
-          .collection(collectionName)
+          .collection('users')
           .doc(email)
           .collection('messaging_users')
-          .onSnapshot((snapshot) => {
-              const fetchedDocuments: Message[] = [];
-    
-              snapshot.forEach((doc) => {
-                  fetchedDocuments.push({ Email_Address: doc.data().Email_Address, Username: doc.data().Username });
-              });
-    
-              setDocuments(fetchedDocuments);
-          }, (error) => {
-              console.error('Error fetching documents:', error);
-          });
+          .onSnapshot(async (snapshot) => {
+            let fetchedDocuments: Message[] = await Promise.all(snapshot.docs.map(async (doc) => {
+              const userDoc = await firebase.firestore().collection('users').doc(doc.data().Email_Address).get();
+              const profilePicture = userDoc.data()?.profilePicture;
+              return { Email_Address: doc.data().Email_Address, Username: doc.data().Username, profilePicture };
+          }));
+          
+          setDocuments(fetchedDocuments);
+          setIsLoading(false);
+        }, (error) => {
+            console.error('Error fetching documents:', error);
+            setIsLoading(false);
+        });
     
         return unsubscribe;  // Returning the function to unsubscribe from the snapshot listener
     };
@@ -118,7 +124,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         <View>
           <View style={styles.combineContainer}>
           <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
-
+              {item.profilePicture && <Image source={{ uri: item.profilePicture }} style={{ width: '100%', height: '100%' }} />}
           </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
             <Text style={styles.itemText}>{item.Username}</Text>
@@ -129,14 +135,18 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     
 
     return (
-        <View style={styles.container}>
-          <View>
-            <FlatList
-                data={documents}
-                renderItem={renderItem}
-                keyExtractor={item => item.Email_Address}
-            />
-            </View>
+      <View style={styles.container}>
+      {isLoading ?
+        <ActivityIndicator size="large" color="gray" /> :
+        <View>
+          <FlatList
+            data={documents}
+            renderItem={renderItem}
+            keyExtractor={item => item.Email_Address}
+          />
+        </View>
+      }
+
             <View style={styles.container_button}>
             <TouchableOpacity
                 onPress={() => props.navigation.navigate("ChatView")}
@@ -180,7 +190,6 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         pictureContainer: {
           backgroundColor: 'gray',
           height: 80,
-          padding: 10,
           marginVertical: 1,
           flexBasis:80,
         },
@@ -194,9 +203,6 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           borderBottomColor: 'gray',
           borderBottomWidth: 2,
           flex:1
-          
-         
-          
           },
 
         leftbutton: {
