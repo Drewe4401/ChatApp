@@ -5,6 +5,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import UploadImage from './UploadImage';
 import jwtDecode from 'jwt-decode';
 import { firebase } from '../config/firebase';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 interface LoginScreenProps {
   navigation: any;
@@ -85,6 +87,7 @@ const styles = StyleSheet.create({
     height: 500,
     borderRadius: 500/2,
     bottom: 350,
+    
   },
   changePassword: {
     width: "100%",

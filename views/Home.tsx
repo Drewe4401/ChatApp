@@ -116,10 +116,14 @@ const Home: React.FC<LoginScreenProps> = (props) => {
 
     const renderItem = ({ item }: { item: Message }) => (
         <View>
+          <View style={styles.combineContainer}>
+          <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
+
+          </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
-            <Text style={styles.itemText}>Email: {item.Email_Address}</Text>
             <Text style={styles.itemText}>Name: {item.Username}</Text>
           </TouchableOpacity>
+          </View>
         </View>
       );
     
@@ -169,13 +173,32 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             color: '#000',
             fontSize: 16,
           },
+        
+        combineContainer:{
+          flexDirection: "row",
+        } , 
+        pictureContainer: {
+          backgroundColor: 'gray',
+          height: 80,
+          padding: 10,
+          marginVertical: 1,
+          flexBasis:80,
+        },
+
         fancyContainer: {
           maxWidth: '100%',
           height: 80,
           padding: 10,
           marginVertical: 1,
-          backgroundColor: '#e5e5ea',
+          backgroundColor: '#FFFFFF',
+          borderBottomColor: 'gray',
+          borderBottomWidth: 2,
+          flex:1
+          
+         
+          
           },
+
         leftbutton: {
             alignItems: 'center',
             marginLeft: 15,
