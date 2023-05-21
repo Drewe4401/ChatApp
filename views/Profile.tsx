@@ -60,8 +60,17 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
       </View>
       
       <View style={styles.inputcontainer}>
-        <Text>User Email: {email}</Text>
         {/* /*<Text>User Name: {}</Text> */}
+        <View style={styles.combineContainer}>
+          <View style={styles.SquareShapeView}>
+          <Text>User Email:</Text>
+          </View>
+          <View style={styles.RectangleShapeView}>
+          <Text>{email}</Text>
+
+          </View>
+        </View>
+        
         <TouchableOpacity onPress={handleChangePassword}>
           <LinearGradient
               start={{ x: 0, y: 0 }}
@@ -79,8 +88,8 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
               style={styles.logout}>
           <Text>Logout</Text>
           </LinearGradient>
-
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -107,6 +116,9 @@ const styles = StyleSheet.create({
     height: 500,
     borderRadius: 500/2,
     bottom: 350,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
     
   },
   changePassword: {
@@ -117,6 +129,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
     backgroundColor: "#f5ba13",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   logout: {
     width: "100%",
@@ -126,9 +141,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
     backgroundColor: "#FF0000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   inputcontainer: {
     bottom:"55%",
+  },
+  combineContainer:{
+    flexDirection: "row",
+  } , 
+  SquareShapeView: {
+    backgroundColor: '#e0b3fb',
+    height: 40,
+    marginVertical: 1,
+    flexBasis:80,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  RectangleShapeView: {
+    maxWidth: '100%',
+    height: 40,
+    padding: 10,
+    marginVertical: 1,
+    backgroundColor: '#ddd8fd',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 2,
+    flex:1,
+    justifyContent: "center",
   }
 });
 

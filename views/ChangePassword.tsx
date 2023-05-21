@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '../config/firebase';
 import jwtDecode from 'jwt-decode';
 import { EmailAuthProvider, reauthenticateWithCredential, signInWithEmailAndPassword, updatePassword } from 'firebase/auth';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ChangePasswordProps {
   navigation: any;
@@ -98,11 +99,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
   return (
     <View style={styles.container}>
       <TextInput
+      
         style={styles.input}
         onChangeText={setCurrentPassword}
         value={currentPassword}
         placeholder="Current Password"
         secureTextEntry
+        
       />
       <TextInput
         style={styles.input}
@@ -118,8 +121,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
         placeholder="Confirm New Password"
         secureTextEntry
       />
-      <TouchableOpacity style={styles.submit} onPress={handleChangePassword}>
+      <TouchableOpacity onPress={handleChangePassword}>
+      <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{x: 1, y: 1 }}
+              colors={['#0b9df5', '#0b76f5', '#0b4ff5', '#0b4ff5', '#0b28f5']}
+              style={styles.submit}>
         <Text>Submit</Text>
+      </LinearGradient>
       </TouchableOpacity>
     </View>
   );
@@ -131,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    
   },
   input: {
     backgroundColor: 'white',
@@ -140,6 +150,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingLeft: 8,
     borderBottomColor: 'gray',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
   },
   title: {
     fontSize: 24,
@@ -155,6 +168,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#007AFF",
     marginLeft: '25%',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
 });
 
