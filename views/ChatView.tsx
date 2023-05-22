@@ -24,22 +24,13 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
 
   const fetchUserData = async (email : string) => {
     console.log(email.toLowerCase());
-      
-
+  
     try {
       const userSnapshot = await firebase.firestore().collection('users').where('Email_Address', '==', email.toLowerCase()).get();
       if (!userSnapshot.empty) {
         console.log(userSnapshot.docs[0]);
         const newEmail = userSnapshot.docs[0].get('Email_Address');
-        const authToken = await AsyncStorage.getItem('authToken');
-        if(authToken){
-        const decodedToken = jwtDecode(authToken) as DecodedToken;
-        setUserEmail(decodedToken.email.toLowerCase());
-        }
-        const todoRef = firebase.firestore().collection('users').doc(UserEmail).collection('messaging_users').doc(newEmail);
-        todoRef
-          .set(userSnapshot.docs[0].data())
-        return userSnapshot.docs[0].data();
+        return { userData: userSnapshot.docs[0].data(), userEmail: newEmail };
       } else {
         Alert.alert("User not found");
       }
@@ -48,13 +39,20 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
       return null;
     }
   };
-
+  
   const createChat = async () => {
     try {
-      const userData = await fetchUserData(email);
-      if (userData) {
-        // You can create chat logic here
-        // For example, create a chat document in Firestore, add members to the chat, etc.
+      const authToken = await AsyncStorage.getItem('authToken');
+      let userEmail = '';
+      if (authToken) {
+        const decodedToken = jwtDecode(authToken) as DecodedToken;
+        userEmail = decodedToken.email.toLowerCase();
+      }
+      const result = await fetchUserData(email);
+      if (result) {
+        const { userData, userEmail: newEmail } = result;
+        const todoRef = firebase.firestore().collection('users').doc(userEmail).collection('messaging_users').doc(newEmail);
+        todoRef.set(userData);
         props.navigation.navigate("Chat", {email: email});
       }
     } catch (error) {
