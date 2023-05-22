@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface LoginScreenProps {
   navigation: any;
+  route: any;
 }
 
 interface DecodedToken {
@@ -124,9 +125,9 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         <View>
           <View style={styles.combineContainer}>
           <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
-              {item.profilePicture && <Image source={{ uri: item.profilePicture }} style={{ width: '100%', height: '100%' }} />}
+              {item.profilePicture && <Image source={{ uri: item.profilePicture }} style={{ width: '100%', height: '100%', borderRadius:40 }} />}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
+          <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {email: item.Email_Address})}>
             <Text style={styles.itemText}>{item.Username}</Text>
           </TouchableOpacity>
           </View>
@@ -189,10 +190,12 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         } , 
         pictureContainer: {
           backgroundColor: 'gray',
-          height: 80,
+          height: 78,
           marginVertical: 1,
-          flexBasis:80,
-          borderRadius: 25,
+          flexBasis: 80,
+          borderRadius: 40,
+          borderWidth: 2,
+          borderColor: 'black',
         },
 
         fancyContainer: {

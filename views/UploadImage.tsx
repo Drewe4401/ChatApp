@@ -96,9 +96,7 @@ export default function UploadImage() {
 
 const imageUploaderStyles = StyleSheet.create({
   container: {
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 7,
+    elevation: 2,
     height: 200,
     width: 200,
     backgroundColor: '#efefef',

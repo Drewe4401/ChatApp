@@ -55,7 +55,7 @@ const ChatView: React.FC<LoginScreenProps> = (props) => {
       if (userData) {
         // You can create chat logic here
         // For example, create a chat document in Firestore, add members to the chat, etc.
-        props.navigation.navigate("Chat");
+        props.navigation.navigate("Chat", {email: email});
       }
     } catch (error) {
       console.error('Error creating chat:', error);

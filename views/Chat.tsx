@@ -1,5 +1,5 @@
 // Chat.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,39 +10,172 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import jwtDecode from "jwt-decode";
+import { firebase } from '../config/firebase';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface LoginScreenProps {
-    navigation: any;
-  }
+  navigation: any;
+  route: any;
+}
 
 interface MessageItem {
-    id: string;
-    text: string;
-    sender: 'user' | 'recipient';
+  id: string;
+  message: string;
+  sender: 'user' | 'recipient';
+  date: string;
+}
+
+interface DecodedToken {
+  email: string;
+  // Add other properties you expect in the token here
 }
   
-const Chat: React.FC<LoginScreenProps> = (props) => {
-    const [messages, setMessages] = useState<MessageItem[]>([
-        { id: '1', text: 'Hello!', sender: 'user' },
-        { id: '2', text: 'Hi!', sender: 'recipient' },
-        { id: '3', text: 'How are you?', sender: 'user' },
-      ]);
+const Chat: React.FC<LoginScreenProps> = ({navigation, route}) => {
+    const [messages, setMessages] = useState<MessageItem[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [UserEmail, setUserEmail] = useState('');
+
 
   const sendMessage = () => {
     if (newMessage.trim().length > 0) {
-      setMessages([
-        ...messages,
-        { id: Date.now().toString(), text: newMessage, sender: 'user' },
-      ]);
-      setNewMessage('');
-    }
+      const db = firebase.firestore();
+
+      let Temp = ""; // Declare variable to hold the username
+  
+      // First, get the Username from the Firestore document
+      db.collection('users').doc(UserEmail).get().then((doc) => {
+        if (doc.exists && doc.data()) {
+          let data = doc.data();
+          if(data) {
+            Temp = data.Username; // Assign the username to `temp`
+            // Rest of your code...
+          }
+        } else {
+          console.log("No such document!");
+        }
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+
+      // get a reference to the 'messages' collection inside the specified document
+      let messagesRef = db.collection('users')
+                          .doc(UserEmail)
+                          .collection('messaging_users')
+                          .doc(emailMessage)
+                          .collection('messages');
+    
+      // add a new document with the given message
+      messagesRef.add({
+        // assuming 'message' is an object containing the relevant fields
+        message: newMessage,
+        sender: 'user',
+        date: new Date(),
+      })
+      .then((docRef) => {
+
+          messagesRef = firebase.firestore().collection('users').doc(emailMessage).collection('messaging_users');
+          messagesRef.doc(UserEmail).get().then((docSnapshot) => {
+            if (!docSnapshot.exists) {
+              // If the document does not exist, add a new one
+              messagesRef.doc(UserEmail).set({
+                Email_Address: UserEmail,
+                Username: Temp,
+              })
+              .then(() => {
+                // Now you can add your message to the collection 'messages'
+                messagesRef.doc(UserEmail).collection('messages').add({
+                  message: newMessage,
+                  sender: 'recipient',
+                  date: new Date(),
+                });
+              })
+              .catch((error) => {
+                console.error('Error adding document: ', error);
+              });
+            } else {
+              // If the document already exists, add the message to the existing 'messages' collection
+              messagesRef.doc(UserEmail).collection('messages').add({
+                message: newMessage,
+                sender: 'recipient',
+                date: new Date(),
+              });
+            }
+          });
+        setNewMessage('');
+      })
+      .catch((error) => {
+        console.error('Error adding message: ', error);
+      });
   };
+}
 
   // Add this function inside the Chat component, before the renderItem function
 const handleAddAttachment = () => {
     // Implement your logic for sending photos or attachments here
     console.log('Add attachment');
+  };
+
+  useEffect(() => {
+    const setEmailAndSubscribe = async () => {
+      const userEmail = await getEmailFromAuthToken();
+  
+      if (route.params?.email && userEmail) {
+        const emailMessage = route.params.email;
+        setEmailMessage(emailMessage);
+  
+        const unsubscribe = firebase
+          .firestore()
+          .collection('users')
+          .doc(userEmail)
+          .collection('messaging_users')
+          .doc(emailMessage)
+          .collection('messages')
+          .orderBy('date', 'desc')
+          .onSnapshot((snapshot) => {
+            const fetchedMessages: MessageItem[] = [];
+            snapshot.forEach((doc) => {
+                fetchedMessages.unshift({
+                    id: doc.id,
+                    message: doc.data().message,
+                    sender: doc.data().sender,
+                    date: doc.data().date,
+                });
+            });
+            setMessages(fetchedMessages);
+          });
+  
+        return unsubscribe; // This function will be called when component unmounts
+      }
+    };
+  
+    setEmailAndSubscribe().then(unsubscribe => {
+      return () => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
+    });
+  }, [route.params?.email]);
+  
+  const getEmailFromAuthToken = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem('authToken');
+  
+      if (authToken) {
+        const decodedToken = jwtDecode(authToken) as DecodedToken;
+        const userEmail = decodedToken.email.toLowerCase();
+        setUserEmail(userEmail);
+        return userEmail;
+      } else {
+        console.log('No auth token found');
+        return null;
+      }
+    } catch (error) {
+      console.log('Error getting email from auth token:', error);
+      return null;
+    }
   };
 
   const renderItem = ({ item }: { item: MessageItem }) => (
@@ -62,7 +195,7 @@ const handleAddAttachment = () => {
             : styles.recipientMessageText,
         ]}
       >
-        {item.text}
+        {item.message}
       </Text>
     </View>
   );
@@ -76,7 +209,6 @@ const handleAddAttachment = () => {
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        inverted
         contentContainerStyle={styles.chatList}
       />
       <View style={styles.inputContainer}>
