@@ -35,6 +35,7 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     const [search, setSearch] = useState('');
     const [filteredDocuments, setFilteredDocuments] = useState<Message[]>([]);
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [unsubscribeFunctions, setUnsubscribeFunctions] = useState<(() => void)[]>([]);
 
 
     const navigation = useNavigation();
@@ -45,8 +46,14 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     };
 
     const handleSearch = () => {
-      setIsSearchVisible(true);
-  };
+      if (isSearchVisible) {
+        setSearch('');
+        const lowerCaseSearch = search.toLowerCase();
+        const filtered = documents.filter(doc => doc.Username.toLowerCase().includes(lowerCaseSearch));
+        setFilteredDocuments(filtered);
+      }
+      setIsSearchVisible(!isSearchVisible);
+    };
 
     const getEmailFromAuthToken = async () => {
         try {
@@ -67,8 +74,9 @@ const Home: React.FC<LoginScreenProps> = (props) => {
       };
 
       const fetchData = (email: string): (() => void) => {
-
         setIsLoading(true);
+    
+        const unsubscribes: (() => void)[] = [];
     
         const unsubscribe = firebase
           .firestore()
@@ -77,31 +85,57 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           .collection('messaging_users')
           .onSnapshot(async (snapshot) => {
             let fetchedDocuments: Message[] = await Promise.all(snapshot.docs.map(async (doc) => {
-              const userDoc = await firebase.firestore().collection('users').doc(doc.data().Email_Address).get();
-              const profilePicture = userDoc.data()?.profilePicture;
-    
-              // Get latest message
-              const messagesSnapshot = await firebase.firestore().collection('users').doc(email).collection('messaging_users').doc(doc.data().Email_Address).collection('messages').orderBy('date', 'desc').limit(1).get();
-              let lastMessage = '';
-              let lastMessageDate: firebase.firestore.Timestamp | null = null;
-              if(!messagesSnapshot.empty){
-                  lastMessage = messagesSnapshot.docs[0].data().message;
-                  lastMessageDate = messagesSnapshot.docs[0].data().date;
-              }
-              
-              return { Email_Address: doc.data().Email_Address, Username: doc.data().Username, profilePicture, lastMessage, date: lastMessageDate };
-          }));
+                const userDoc = await firebase.firestore().collection('users').doc(doc.data().Email_Address).get();
+                const profilePicture = userDoc.data()?.profilePicture;
           
-          setDocuments(fetchedDocuments);
-          setIsLoading(false);
+                const messagesUnsubscribe = firebase
+                  .firestore()
+                  .collection('users')
+                  .doc(email)
+                  .collection('messaging_users')
+                  .doc(doc.data().Email_Address)
+                  .collection('messages')
+                  .orderBy('date', 'desc')
+                  .limit(1)
+                  .onSnapshot((messagesSnapshot) => {
+                    if (!messagesSnapshot.empty) {
+                        const lastMessage = messagesSnapshot.docs[0].data().message;
+                        const lastMessageDate = messagesSnapshot.docs[0].data().date;
+    
+                        // This function will be called each time a new message is added
+                        // Update the state with the new message
+                        setDocuments((prevDocuments) => {
+                          const newDocuments = [...prevDocuments];
+                          const index = newDocuments.findIndex(
+                            (d) => d.Email_Address === doc.data().Email_Address
+                          );
+                          if (index !== -1) {
+                            newDocuments[index].lastMessage = lastMessage;
+                            newDocuments[index].date = lastMessageDate;
+                          }
+                          return newDocuments;
+                        });
+                    }
+                  });
+                unsubscribes.push(messagesUnsubscribe);
+    
+                return { Email_Address: doc.data().Email_Address, Username: doc.data().Username, profilePicture, lastMessage: '', date: null };
+            }));
+    
+            setDocuments(fetchedDocuments);
+            setIsLoading(false);
         }, (error) => {
             console.error('Error fetching documents:', error);
             setIsLoading(false);
         });
     
-        return unsubscribe;  // Returning the function to unsubscribe from the snapshot listener
+        return () => {
+          // Unsubscribe from the "messaging_users" listener
+          unsubscribe();
+          // Unsubscribe from all "messages" listeners
+          unsubscribes.forEach((unsub) => unsub());
+        };
     };
-
     const formatDate = (date: firebase.firestore.Timestamp | null): string => {
       if (date === null) return '';
       const messageDate = date.toDate(); // Convert to Date
@@ -124,8 +158,8 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           hours = 12; // convert 0 hours (midnight) to 12
         }
     
-        // Convert hours and minutes to strings and prepend 0 if they're less than 10
-        const hoursString = hours < 10 ? '0' + hours : '' + hours;
+        // Convert hours and minutes to strings and prepend 0 to minutes if they're less than 10
+        const hoursString = '' + hours;
         const minutesString = minutes < 10 ? '0' + minutes : '' + minutes;
     
         return `${hoursString}:${minutesString} ${period}`;
@@ -155,23 +189,22 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     const lowerCaseSearch = search.toLowerCase();
     const filtered = documents.filter(doc => doc.Username.toLowerCase().includes(lowerCaseSearch));
     setFilteredDocuments(filtered);
-    setIsSearchVisible(false);  // Hide search input after search
 };
 
-    useEffect(() => {
-        props.navigation.setOptions({
-            headerLeft: () => (
-            <TouchableOpacity style={styles.leftbutton} onPress={handleProfile}>
-                <FontAwesome name='bars' size={24} color={colors.blackcolor} style={{marginRight: 15}}/>
-            </TouchableOpacity>
-            ),
-            headerRight: () => (
-            <TouchableOpacity style={styles.rightbutton} onPress={handleSearch}>
-                <FontAwesome name="search" size={24} color={colors.blackcolor} style={{marginLeft: 15}}/>
-            </TouchableOpacity>
-            ),
-        });
-    }, [navigation]);
+React.useLayoutEffect(() => {
+  props.navigation.setOptions({
+      headerLeft: () => (
+      <TouchableOpacity style={styles.leftbutton} onPress={handleProfile}>
+          <FontAwesome name='bars' size={24} color={colors.blackcolor} style={{marginRight: 15}}/>
+      </TouchableOpacity>
+      ),
+      headerRight: () => (
+      <TouchableOpacity style={styles.rightbutton} onPress={handleSearch}>
+          <FontAwesome name="search" size={24} color={colors.blackcolor} style={{marginLeft: 15}}/>
+      </TouchableOpacity>
+      ),
+  });
+}, [navigation, isSearchVisible]);
 
 
 
@@ -182,13 +215,15 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {email: item.Email_Address})}>
               <View>
+                <View style={styles.headerContainer}> 
                   <Text style={styles.itemText}>{item.Username}</Text>
-                  <Text style={styles.lastMessageText}>{item.lastMessage}</Text>
                   <Text style={styles.lastMessageDate}>{formatDate(item.date)}</Text>
+                </View>
+                <Text style={styles.lastMessageText}>{item.lastMessage}</Text>
               </View>
           </TouchableOpacity>
       </View>
-  );
+    );
     
 
     return (
@@ -252,18 +287,24 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             justifyContent: 'center',
         },
         itemText: {
-            color: '#000',
-            fontSize: 20,
-          },
-          lastMessageDate: {
-            fontSize: 12,
-            color: '#aaa',
+          color: '#000',
+          fontSize: 20,
+          flex: 1
         },
-          lastMessageText: {
-            color: '#666',
-            fontSize: 16,
+        lastMessageDate: {
+          fontSize: 12,
+          color: '#aaa',
         },
-        
+        lastMessageText: {
+          color: '#666',
+          fontSize: 16,
+        },
+        headerContainer: {  
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+          alignItems: 'center'
+        },
         combineContainer:{
           flexDirection: "row",
         } , 
