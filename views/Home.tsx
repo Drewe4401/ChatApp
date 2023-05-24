@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, FlatList, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity, Text,TextInput, FlatList, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '../colors';
@@ -23,6 +23,8 @@ interface Message{
     Email_Address: string;
     Username: string;
     profilePicture: string;
+    lastMessage: string;
+    date: firebase.firestore.Timestamp | null;
 }
 
 const Home: React.FC<LoginScreenProps> = (props) => {
@@ -30,6 +32,9 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     const [email, setEmail] = useState('');
     const [documents, setDocuments] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [search, setSearch] = useState('');
+    const [filteredDocuments, setFilteredDocuments] = useState<Message[]>([]);
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
 
 
     const navigation = useNavigation();
@@ -40,9 +45,8 @@ const Home: React.FC<LoginScreenProps> = (props) => {
     };
 
     const handleSearch = () => {
-        //needs to me programmed
-
-    }
+      setIsSearchVisible(true);
+  };
 
     const getEmailFromAuthToken = async () => {
         try {
@@ -75,7 +79,17 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             let fetchedDocuments: Message[] = await Promise.all(snapshot.docs.map(async (doc) => {
               const userDoc = await firebase.firestore().collection('users').doc(doc.data().Email_Address).get();
               const profilePicture = userDoc.data()?.profilePicture;
-              return { Email_Address: doc.data().Email_Address, Username: doc.data().Username, profilePicture };
+    
+              // Get latest message
+              const messagesSnapshot = await firebase.firestore().collection('users').doc(email).collection('messaging_users').doc(doc.data().Email_Address).collection('messages').orderBy('date', 'desc').limit(1).get();
+              let lastMessage = '';
+              let lastMessageDate: firebase.firestore.Timestamp | null = null;
+              if(!messagesSnapshot.empty){
+                  lastMessage = messagesSnapshot.docs[0].data().message;
+                  lastMessageDate = messagesSnapshot.docs[0].data().date;
+              }
+              
+              return { Email_Address: doc.data().Email_Address, Username: doc.data().Username, profilePicture, lastMessage, date: lastMessageDate };
           }));
           
           setDocuments(fetchedDocuments);
@@ -86,6 +100,39 @@ const Home: React.FC<LoginScreenProps> = (props) => {
         });
     
         return unsubscribe;  // Returning the function to unsubscribe from the snapshot listener
+    };
+
+    const formatDate = (date: firebase.firestore.Timestamp | null): string => {
+      if (date === null) return '';
+      const messageDate = date.toDate(); // Convert to Date
+      const today = new Date(); // Get current date
+    
+      const sameDay = today.getFullYear() === messageDate.getFullYear() &&
+                      today.getMonth() === messageDate.getMonth() &&
+                      today.getDate() === messageDate.getDate();
+    
+      if (sameDay) {
+        // Return the time if the message was sent today
+        let hours = messageDate.getHours();
+        const minutes = messageDate.getMinutes();
+    
+        let period = 'AM';
+        if (hours >= 12) {
+          period = 'PM';
+          if (hours > 12) hours -= 12; // convert to 12-hour format
+        } else if (hours === 0) {
+          hours = 12; // convert 0 hours (midnight) to 12
+        }
+    
+        // Convert hours and minutes to strings and prepend 0 if they're less than 10
+        const hoursString = hours < 10 ? '0' + hours : '' + hours;
+        const minutesString = minutes < 10 ? '0' + minutes : '' + minutes;
+    
+        return `${hoursString}:${minutesString} ${period}`;
+      } else {
+        // Return the date if the message was not sent today
+        return messageDate.toLocaleDateString();
+      }
     };
     
     useEffect(() => {
@@ -103,6 +150,13 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           }
       }
   }, []);
+
+  const handleSearchExecution = () => {
+    const lowerCaseSearch = search.toLowerCase();
+    const filtered = documents.filter(doc => doc.Username.toLowerCase().includes(lowerCaseSearch));
+    setFilteredDocuments(filtered);
+    setIsSearchVisible(false);  // Hide search input after search
+};
 
     useEffect(() => {
         props.navigation.setOptions({
@@ -122,17 +176,19 @@ const Home: React.FC<LoginScreenProps> = (props) => {
 
 
     const renderItem = ({ item }: { item: Message }) => (
-        <View>
-          <View style={styles.combineContainer}>
+      <View style={styles.combineContainer}>
           <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
               {item.profilePicture && <Image source={{ uri: item.profilePicture }} style={{ width: '100%', height: '100%', borderRadius:40 }} />}
           </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {email: item.Email_Address})}>
-            <Text style={styles.itemText}>{item.Username}</Text>
+              <View>
+                  <Text style={styles.itemText}>{item.Username}</Text>
+                  <Text style={styles.lastMessageText}>{item.lastMessage}</Text>
+                  <Text style={styles.lastMessageDate}>{formatDate(item.date)}</Text>
+              </View>
           </TouchableOpacity>
-          </View>
-        </View>
-      );
+      </View>
+  );
     
 
     return (
@@ -140,11 +196,20 @@ const Home: React.FC<LoginScreenProps> = (props) => {
       {isLoading ?
         <ActivityIndicator size="large" color="gray" /> :
         <View>
-          <FlatList
-            data={documents}
-            renderItem={renderItem}
-            keyExtractor={item => item.Email_Address}
-          />
+          {isSearchVisible && 
+    <TextInput
+        value={search}
+        onChangeText={setSearch}
+        onEndEditing={handleSearchExecution}
+        style={styles.searchInput}
+        placeholder="Search..."
+    />
+}
+<FlatList
+    data={filteredDocuments.length > 0 ? filteredDocuments : documents}
+    renderItem={renderItem}
+    keyExtractor={item => item.Email_Address}
+/>
         </View>
       }
 
@@ -172,6 +237,12 @@ const Home: React.FC<LoginScreenProps> = (props) => {
           marginTop: '175%',
           marginLeft: '85%',
       },
+      searchInput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        paddingLeft: 8,
+    },
         chatButton: {
             backgroundColor: colors.blackcolor,
             height: 50,
@@ -184,6 +255,14 @@ const Home: React.FC<LoginScreenProps> = (props) => {
             color: '#000',
             fontSize: 20,
           },
+          lastMessageDate: {
+            fontSize: 12,
+            color: '#aaa',
+        },
+          lastMessageText: {
+            color: '#666',
+            fontSize: 16,
+        },
         
         combineContainer:{
           flexDirection: "row",
