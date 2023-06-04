@@ -9,6 +9,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import jwtDecode from "jwt-decode";
 import { firebase } from '../config/firebase';
@@ -201,32 +202,35 @@ const handleAddAttachment = () => {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <FlatList
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.chatList}
+  <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  keyboardVerticalOffset={80}
+  style={styles.container}
+>
+  <SafeAreaView style={styles.innerContainer}>
+    <FlatList
+      data={messages}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.chatList}
+    />
+    <View style={styles.inputContainer}>
+      {/* <TouchableOpacity onPress={handleAddAttachment} style={styles.addButton}>
+          <Text style={styles.addButtonText}>+</Text>
+      </TouchableOpacity> */}
+      <TextInput
+        style={styles.input}
+        value={newMessage}
+        onChangeText={setNewMessage}
+        placeholder="Type a message"
+        multiline
       />
-      <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={handleAddAttachment} style={styles.addButton}>
-            <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
-        <TextInput
-          style={styles.input}
-          value={newMessage}
-          onChangeText={setNewMessage}
-          placeholder="Type a message"
-          multiline
-        />
-        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+      <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+        <Text style={styles.sendButtonText}>Send</Text>
+      </TouchableOpacity>
+    </View>
+  </SafeAreaView>
+</KeyboardAvoidingView>
   );
 };
 
@@ -245,6 +249,9 @@ const styles = StyleSheet.create({
     maxWidth: '75%',
     paddingHorizontal: 15,
     paddingVertical: 10,
+  },
+  innerContainer: {
+    flex: 1,
   },
   addButton: {
     marginRight: 5,
@@ -278,11 +285,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
+    paddingTop: 15,
+    paddingBottom: 15,
     borderTopColor: '#E1E1E1',
     borderTopWidth: 1,
   },
   input: {
     flex: 1,
+    fontSize: 18,
     minHeight: 40,
     backgroundColor: '#E1E1E1',
     borderRadius: 20,

@@ -210,7 +210,7 @@ React.useLayoutEffect(() => {
 
     const renderItem = ({ item }: { item: Message }) => (
       <View style={styles.combineContainer}>
-          <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('Chat', {item})}>
+          <TouchableOpacity style={styles.pictureContainer} onPress={() => props.navigation.navigate('ProfileView', {item})}>
               {item.profilePicture && <Image source={{ uri: item.profilePicture }} style={{ width: '100%', height: '100%', borderRadius:40 }} />}
           </TouchableOpacity>
           <TouchableOpacity style={styles.fancyContainer} onPress={() => props.navigation.navigate('Chat', {email: item.Email_Address})}>
@@ -309,11 +309,13 @@ React.useLayoutEffect(() => {
           flexDirection: "row",
         } , 
         pictureContainer: {
+          top: 5,
+          left: 5,
           backgroundColor: 'gray',
-          height: 78,
+          height: 68,
+          width: 68,
           marginVertical: 1,
-          flexBasis: 80,
-          borderRadius: 40,
+          borderRadius: 35,
           borderWidth: 2,
           borderColor: 'black',
         },
@@ -321,6 +323,7 @@ React.useLayoutEffect(() => {
         fancyContainer: {
           maxWidth: '100%',
           height: 80,
+          left: 5,
           padding: 10,
           marginVertical: 1,
           backgroundColor: '#FFFFFF',
