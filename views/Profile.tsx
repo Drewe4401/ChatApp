@@ -75,7 +75,7 @@ const Profile: React.FC<LoginScreenProps> = (props) => {
           <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{x: 1, y: 1 }}
-              colors={['#f5630b', '#f5770b', '#f58b0b', '#f59e0b', '#f5b20b']}
+              colors={['#f5650b', '#f58c0b', '#f59f0b', '#f5c60b', '#f5da0b']}
               style={styles.changePassword}>
               <Text>Change Password</Text>
           </LinearGradient>
@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 6,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
   },
   logout: {
     width: "100%",
@@ -144,6 +146,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 6,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
   },
   inputcontainer: {
     bottom:"55%",
@@ -152,24 +156,37 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   } , 
   SquareShapeView: {
-    backgroundColor: '#e0b3fb',
+    backgroundColor: '#f5da0b',
     height: 40,
     marginVertical: 1,
     flexBasis:80,
-    borderRadius: 5,
+    borderRadius: 0,
     alignItems: "center",
     justifyContent: "center",
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   RectangleShapeView: {
     maxWidth: '100%',
     height: 40,
     padding: 10,
     marginVertical: 1,
-    backgroundColor: '#ddd8fd',
+    backgroundColor: '#f5da0b',
     borderBottomColor: 'gray',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
     flex:1,
+    alignItems: "center",
     justifyContent: "center",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 6,
   }
 });
 
